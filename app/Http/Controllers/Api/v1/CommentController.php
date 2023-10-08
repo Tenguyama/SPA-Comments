@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Data\CommentData;
 use App\Http\Controllers\Controller;
 use App\Repositories\Comment\CommentRepositoryImpl;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class CommentController extends Controller
@@ -34,8 +35,8 @@ class CommentController extends Controller
         return new JsonResponse($this->repository->getAllByParentId($parentId));
     }
 
-    public function getAllByPaginate($page)
+    public function getAllByPaginate($count ,$page, $sort_field, $sort_direction)
     {
-        return new JsonResponse($this->repository->getAllByPaginate(25, $page));
+        return new JsonResponse($this->repository->getAllByPaginate($count, $page, $sort_field, $sort_direction));
     }
 }

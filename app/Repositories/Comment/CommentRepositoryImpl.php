@@ -58,11 +58,31 @@ class CommentRepositoryImpl implements CommentRepository
         return CommentData::collection($this->model->query()->where('parent_id','=',$parentId)->get());
     }
 
-    public function getAllByPaginate(int $count, int $page)
+    public function getAllByPaginate($count, $page, $sortField, $sortDirection)
     {
-        $paginatedData = $this->model->query()
-            ->where('parent_id', "=",null)
-            ->paginate($count, ['*'], 'page', $page);
+        $query = $this->model->query()
+            ->join('users', 'comments.user_id', '=', 'users.id')
+            ->select(
+                'comments.id as comment_id',
+                'comments.user_id as user_id',
+                'comments.body as body',
+                'comments.parent_id as parent_id',
+                'comments.home_page as home_page',
+                'comments.created_at as created_at',
+                'comments.updated_at as updated_at',
+                'users.user_name as user_name',
+                'users.email as email',
+            )
+
+            ->where('parent_id', null);
+
+        $validSortFields = ['user_name', 'email', 'created_at'];
+        $sortField = in_array($sortField, $validSortFields) ? $sortField : 'created_at';
+        $sortDirection = in_array(strtolower($sortDirection), ['asc', 'desc']) ? $sortDirection : 'desc';
+
+        $query->orderBy( $sortField, $sortDirection);
+
+        $paginatedData = $query->paginate($count, ['*'], 'page', $page);
 
         return $paginatedData;
     }

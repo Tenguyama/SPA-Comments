@@ -15,5 +15,6 @@ interface CommentRepository
     public function getById(string $commentId):CommentData;
     public function getAllByUserId(string $userId): DataCollection;
     public function getAllByParentId(string $parentId): DataCollection;
-    public function getAllByPaginate(int $count, int $page);
+    //public function getAllByPaginate(int $count, int $page);
+    public function getAllByPaginate($count, $page, $sortField, $sortDirection);
 }
